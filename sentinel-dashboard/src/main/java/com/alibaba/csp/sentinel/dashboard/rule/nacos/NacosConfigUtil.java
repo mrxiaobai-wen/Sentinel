@@ -40,7 +40,7 @@ public final class NacosConfigUtil {
     public static final String SYSTEM_DATA_ID_POSTFIX = "-system-rules";
     public static final String PARAM_FLOW_DATA_ID_POSTFIX = "-param-flow-rules";
     public static final String AUTHORITY_DATA_ID_POSTFIX = "-authority-rules";
-    public static final String DASHBOARD_POSTFIX = "-dashboard";
+    //public static final String DASHBOARD_POSTFIX = "-dashboard";
     public static final String CLUSTER_MAP_DATA_ID_POSTFIX = "-cluster-map";
 
     /**
@@ -71,7 +71,9 @@ public final class NacosConfigUtil {
             return;
         }
 
-        List<Rule> ruleForApp = rules.stream()
+        String dataId = genDataId(app, postfix);
+
+        /*List<Rule> ruleForApp = rules.stream()
                 .map(rule -> {
                     RuleEntity rule1 = (RuleEntity) rule;
                     System.out.println(rule1.getClass());
@@ -80,18 +82,16 @@ public final class NacosConfigUtil {
                     return rule2;
                 })
                 .collect(Collectors.toList());
-
         // 存储，给微服务使用
-        String dataId = genDataId(app, postfix);
         configService.publishConfig(
                 dataId,
                 NacosConfigUtil.GROUP_ID,
                 JSONUtils.toJSONString(ruleForApp)
-        );
+        );*/
 
         // 存储，给控制台使用
         configService.publishConfig(
-                dataId + DASHBOARD_POSTFIX,
+                dataId,
                 NacosConfigUtil.GROUP_ID,
                 JSONUtils.toJSONString(rules)
         );
@@ -110,7 +110,7 @@ public final class NacosConfigUtil {
      */
     public static <T> List<T> getRuleEntitiesFromNacos(ConfigService configService, String appName, String postfix, Class<T> clazz) throws NacosException {
         String rules = configService.getConfig(
-                genDataId(appName, postfix) + DASHBOARD_POSTFIX,
+                genDataId(appName, postfix),
                 NacosConfigUtil.GROUP_ID,
                 3000
         );
