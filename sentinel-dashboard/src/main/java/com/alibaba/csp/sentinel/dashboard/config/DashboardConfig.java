@@ -63,15 +63,6 @@ public class DashboardConfig {
      * Auto remove unhealthy machine after specific period in millisecond.
      */
     public static final String CONFIG_AUTO_REMOVE_MACHINE_MILLIS = "sentinel.dashboard.autoRemoveMachineMillis";
-
-    /**
-     * nacos config
-     */
-    public static final String CONFIG_NACOS_SERVER_URL = "sentinel.dashboard.nacos.server";
-    public static final String CONFIG_NACOS_SERVER_NAMESPACE = "sentinel.dashboard.nacos.namespace";
-    public static final String CONFIG_NACOS_USERNAME = "sentinel.dashboard.nacos.username";
-    public static final String CONFIG_NACOS_PASSWORD = "sentinel.dashboard.nacos.password";
-
     private static final ConcurrentMap<String, Object> cacheMap = new ConcurrentHashMap<>();
     
     @NonNull
@@ -144,29 +135,5 @@ public class DashboardConfig {
     
     public static void clearCache() {
         cacheMap.clear();
-    }
-
-    public static String getNacosServerUrl() {
-        //return getConfigStr(CONFIG_NACOS_SERVER_URL);
-        // todo
-        return "localhost:8848";
-    }
-
-    public static String getNacosServerNamespace() {
-        //return getConfigStr(CONFIG_NACOS_SERVER_NAMESPACE);
-        // todo
-        return "";
-    }
-
-    public static String getNacosUsername() {
-        // return getConfigStr(CONFIG_NACOS_USERNAME);
-        // todo
-        return "nacos";
-    }
-
-    public static String getNacosPassword() {
-        // return getConfigStr(CONFIG_NACOS_PASSWORD);
-        // todo
-        return "nacos";
     }
 }

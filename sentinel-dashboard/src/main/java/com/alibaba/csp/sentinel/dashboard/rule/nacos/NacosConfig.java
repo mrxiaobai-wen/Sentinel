@@ -15,15 +15,17 @@
  */
 package com.alibaba.csp.sentinel.dashboard.rule.nacos;
 
-import com.alibaba.csp.sentinel.dashboard.config.DashboardConfig;
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.FlowRuleEntity;
+import com.alibaba.csp.sentinel.dashboard.rule.nacos.system.NacosConfigProperties;
 import com.alibaba.csp.sentinel.datasource.Converter;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.nacos.api.PropertyKeyConst;
 import com.alibaba.nacos.api.config.ConfigFactory;
 import com.alibaba.nacos.api.config.ConfigService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Properties;
@@ -34,6 +36,9 @@ import java.util.Properties;
  */
 @Configuration
 public class NacosConfig {
+
+    @Autowired
+    private NacosConfigProperties nacosConfigProperties;
 
     @Bean
     public Converter<List<FlowRuleEntity>, String> flowRuleEntityEncoder() {
@@ -50,10 +55,13 @@ public class NacosConfig {
         //return ConfigFactory.createConfigService("localhost:8848");
 
         Properties properties = new Properties();
-        properties.put(PropertyKeyConst.SERVER_ADDR, DashboardConfig.getNacosServerUrl());
-        properties.put(PropertyKeyConst.NAMESPACE,DashboardConfig.getNacosServerNamespace());
-        properties.put(PropertyKeyConst.USERNAME,DashboardConfig.getNacosUsername());
-        properties.put(PropertyKeyConst.PASSWORD,DashboardConfig.getNacosPassword());
+        properties.put(PropertyKeyConst.SERVER_ADDR, nacosConfigProperties.getServer());
+        if (!StringUtils.isEmpty(nacosConfigProperties.getNamespace())) {
+            // 如果指定了命名空间才设置
+            properties.put(PropertyKeyConst.NAMESPACE,nacosConfigProperties.getNamespace());
+        }
+        properties.put(PropertyKeyConst.USERNAME,nacosConfigProperties.getUsername());
+        properties.put(PropertyKeyConst.PASSWORD,nacosConfigProperties.getPassword());
         return ConfigFactory.createConfigService(properties);
     }
 }
