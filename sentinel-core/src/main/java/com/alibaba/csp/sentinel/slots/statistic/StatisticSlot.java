@@ -60,6 +60,7 @@ public class StatisticSlot extends AbstractLinkedProcessorSlot<DefaultNode> {
 
             // Request passed, add thread count and pass count.
             node.increaseThreadNum();
+            // todo issue_1620 这个时候才会增加QPS，但是刚才前面的DefaultController.pass方法已经返回了true
             node.addPassRequest(count);
 
             if (context.getCurEntry().getOriginNode() != null) {

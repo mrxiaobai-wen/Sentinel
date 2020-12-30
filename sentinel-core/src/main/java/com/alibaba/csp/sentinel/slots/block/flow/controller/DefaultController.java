@@ -48,6 +48,8 @@ public class DefaultController implements TrafficShapingController {
     @Override
     public boolean canPass(Node node, int acquireCount, boolean prioritized) {
         int curCount = avgUsedTokens(node);
+        // 当前阈值 + acquireCount 大于规则设定的count,则返回false，否则返回true
+        // todo issue_1620 如果并发执行到这里，并没有加锁，所以多个线程都会返回true，限流失效
         if (curCount + acquireCount > count) {
             if (prioritized && grade == RuleConstant.FLOW_GRADE_QPS) {
                 long currentTime;
@@ -72,6 +74,7 @@ public class DefaultController implements TrafficShapingController {
         if (node == null) {
             return DEFAULT_AVG_USED_TOKENS;
         }
+        // 获取当前qps或者当前线程数
         return grade == RuleConstant.FLOW_GRADE_THREAD ? node.curThreadNum() : (int)(node.passQps());
     }
 
